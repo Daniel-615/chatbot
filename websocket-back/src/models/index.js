@@ -32,8 +32,6 @@ class Database {
 
     _loadModels() {
         const sequelize = this._sequelize;
-
-        // Cargar modelos
         this.models.n8n = require('./n8n.js')(sequelize); 0
     }
 

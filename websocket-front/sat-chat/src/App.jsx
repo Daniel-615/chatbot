@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import "./App.css";
+import { useNavigate } from "react-router-dom";
 
 export default function App() {
   const [messages, setMessages] = useState([]);
@@ -8,6 +9,7 @@ export default function App() {
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef(null);
 
+  const navigate = useNavigate();
   const ws = useRef(null);
   const sessionId = useRef("user-" + Math.random().toString(36).substring(7));
 
@@ -51,7 +53,6 @@ export default function App() {
 
       if (data.type === "n8n-response") {
         const text = data.data?.text;
-
         addMessage(text || "Respuesta vacía", "bot");
       }
     };
@@ -100,10 +101,21 @@ export default function App() {
 
       <div className="chat">
         <div className="header">
-          <div className="header-icon">📊</div>
-          <div className="header-text">
-            <h1>Asistente SAT Guatemala</h1>
-            <p>Tu consultor tributario virtual</p>
+          <div className="header-left">
+            <div className="header-icon">📊</div>
+            <div className="header-text">
+              <h1>Asistente SAT Guatemala</h1>
+              <p>Tu consultor tributario virtual</p>
+            </div>
+          </div>
+
+          <div className="header-actions">
+            <button
+              className="logs-btn"
+              onClick={() => navigate("/logs")}
+            >
+              Ver Logs
+            </button>
           </div>
         </div>
 
