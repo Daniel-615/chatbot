@@ -30,9 +30,14 @@ export default function App() {
 
     ws.current.onopen = () => {
       setConnected(true);
+
       ws.current.send(
-        JSON.stringify({ type: "init", sessionId: sessionId.current })
+        JSON.stringify({
+          type: "init",
+          sessionId: sessionId.current,
+        })
       );
+
       addMessage(
         "Bienvenido al Asistente SAT Guatemala. Estoy listo para ayudarte con tus consultas tributarias.",
         "bot"
@@ -41,14 +46,13 @@ export default function App() {
 
     ws.current.onmessage = (event) => {
       const data = JSON.parse(event.data);
+
       setIsTyping(false);
+
       if (data.type === "n8n-response") {
-        addMessage(
-          data.data?.response?.output ||
-            data.data?.response?.answer ||
-            "Respuesta recibida",
-          "bot"
-        );
+        const text = data.data?.text;
+
+        addMessage(text || "Respuesta vacía", "bot");
       }
     };
 
@@ -70,14 +74,20 @@ export default function App() {
     }
 
     const text = input;
+
     addMessage(text, "user");
     setInput("");
     setIsTyping(true);
 
     await fetch("http://localhost:3000/api/n8n/message", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message: text, sessionId: sessionId.current }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        message: text,
+        sessionId: sessionId.current,
+      }),
     });
   };
 
@@ -90,11 +100,7 @@ export default function App() {
 
       <div className="chat">
         <div className="header">
-          <div className="header-icon">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
-            </svg>
-          </div>
+          <div className="header-icon">📊</div>
           <div className="header-text">
             <h1>Asistente SAT Guatemala</h1>
             <p>Tu consultor tributario virtual</p>
@@ -103,8 +109,7 @@ export default function App() {
 
         <div className={`status-bar ${connected ? "connected" : "disconnected"}`}>
           <span className="status-indicator">
-            <span className="status-dot"></span>
-            {connected ? "Conectado" : "Desconectado"}
+            {connected ? "🟢 Conectado" : "🔴 Desconectado"}
           </span>
           {!connected && (
             <button className="reconnect-btn" onClick={connectWS}>
@@ -116,11 +121,6 @@ export default function App() {
         <div className="messages">
           {messages.length === 0 && (
             <div className="empty-state">
-              <div className="empty-icon">
-                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-                </svg>
-              </div>
               <p>Escribe tu primera consulta tributaria</p>
             </div>
           )}
@@ -128,19 +128,7 @@ export default function App() {
           {messages.map((msg, i) => (
             <div key={i} className={`msg ${msg.type}`}>
               <div className="msg-avatar">
-                {msg.type === "bot" ? (
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <circle cx="12" cy="12" r="10"/>
-                    <path d="M8 14s1.5 2 4 2 4-2 4-2"/>
-                    <line x1="9" y1="9" x2="9.01" y2="9"/>
-                    <line x1="15" y1="9" x2="15.01" y2="9"/>
-                  </svg>
-                ) : (
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                    <circle cx="12" cy="7" r="4"/>
-                  </svg>
-                )}
+                {msg.type === "bot" ? "🤖" : "👤"}
               </div>
               <div className="msg-content">
                 <span className="msg-text">{msg.text}</span>
@@ -150,14 +138,7 @@ export default function App() {
 
           {isTyping && (
             <div className="msg bot">
-              <div className="msg-avatar">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <circle cx="12" cy="12" r="10"/>
-                  <path d="M8 14s1.5 2 4 2 4-2 4-2"/>
-                  <line x1="9" y1="9" x2="9.01" y2="9"/>
-                  <line x1="15" y1="9" x2="15.01" y2="9"/>
-                </svg>
-              </div>
+              <div className="msg-avatar">🤖</div>
               <div className="msg-content">
                 <div className="typing-indicator">
                   <span></span>
@@ -167,6 +148,7 @@ export default function App() {
               </div>
             </div>
           )}
+
           <div ref={messagesEndRef} />
         </div>
 
@@ -178,10 +160,7 @@ export default function App() {
             onKeyDown={(e) => e.key === "Enter" && sendMessage()}
           />
           <button onClick={sendMessage} disabled={!input.trim()}>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <line x1="22" y1="2" x2="11" y2="13"/>
-              <polygon points="22 2 15 22 11 13 2 9 22 2"/>
-            </svg>
+            Enviar
           </button>
         </div>
       </div>
