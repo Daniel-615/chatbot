@@ -187,15 +187,9 @@ export default function App() {
               <div key={i} className={`message ${msg.type}`}>
                 <div className="message-avatar">
                   {msg.type === "bot" ? (
-                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2">
-                      <rect x="3" y="11" width="18" height="10" rx="2"/>
-                      <circle cx="12" cy="5" r="3"/>
-                    </svg>
+                    <img src="/gemini.webp" alt="IA" className="avatar-img" />
                   ) : (
-                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                      <circle cx="12" cy="7" r="4"/>
-                    </svg>
+                    <img src="/vegetta.webp" alt="Usuario" className="avatar-img" />
                   )}
                 </div>
                 <div className="message-content">

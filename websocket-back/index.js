@@ -21,11 +21,20 @@ new Routes(app);
 const socketServer = new SocketServer(server);
 
 app.set("ws", socketServer);
-
+async function showTables() {
+    try {
+        const tables = await db.sequelize.getQueryInterface().showAllTables();
+        console.log("📦 Tablas en la base de datos:");
+        console.log(tables);
+    } catch (err) {
+        console.error(err);
+    }
+}
 async function connectDB() {
     try {
         await db.sequelize.sync();
         console.log("✅ DB conectada");
+        showTables();
     } catch (err) {
         console.error(err);
     }

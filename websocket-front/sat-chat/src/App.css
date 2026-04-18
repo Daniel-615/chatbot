@@ -714,3 +714,23 @@ body {
     display: none;
   }
 }
+
+.avatar-img {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  object-fit: cover;
+
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+
+  flex-shrink: 0;
+
+
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.message:hover .avatar-img {
+  transform: scale(1.05);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.2);
+}

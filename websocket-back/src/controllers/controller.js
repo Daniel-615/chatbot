@@ -8,6 +8,7 @@ class Controller {
 
             if (!message || !sessionId) {
                 return res.status(400).json({
+                    ok: false,
                     message: "Debes enviar message y sessionId"
                 });
             }
@@ -26,9 +27,46 @@ class Controller {
                 }
             );
 
-            const data = await responseFromN8n.json();
+            let data;
+            const rawText = await responseFromN8n.text();
 
-            let cleanResponse =
+            try {
+                data = JSON.parse(rawText);
+            } catch (e) {
+                data = rawText;
+            }
+
+            const isN8nError =
+                !responseFromN8n.ok ||
+                (typeof data === "string" &&
+                    (
+                        data.toLowerCase().includes("webhook") ||
+                        data.toLowerCase().includes("not registered") ||
+                        data.toLowerCase().includes("404") ||
+                        data.toLowerCase().includes("error")
+                    )) ||
+                (typeof data === "object" &&
+                    data?.message &&
+                    data.message.toLowerCase().includes("webhook"));
+
+            if (isN8nError) {
+                const wsServer = req.app.get("ws");
+
+                if (wsServer) {
+                    wsServer.sendToClient(sessionId, {
+                        text: "Lo siento, estamos teniendo dificultades técnicas en este momento. Intenta nuevamente más tarde.",
+                        id: null
+                    });
+                }
+
+                return res.status(500).json({
+                    ok: false,
+                    message: "Error en webhook de n8n",
+                    raw: data
+                });
+            }
+
+            const cleanResponse =
                 data?.data?.message ||
                 data?.message ||
                 data?.output ||
@@ -51,7 +89,6 @@ class Controller {
                     id: saved.id
                 });
             }
-
             return res.json({
                 ok: true,
                 data: {
@@ -62,7 +99,17 @@ class Controller {
             });
 
         } catch (error) {
-            console.error(error);
+            console.error("Controller error:", error);
+
+            const wsServer = req.app.get("ws");
+
+            if (wsServer) {
+                wsServer.sendToClient(req.body.sessionId, {
+                    text: "Error interno del servidor. Intenta nuevamente.",
+                    id: null
+                });
+            }
+
             return res.status(500).json({
                 ok: false,
                 error: error.message

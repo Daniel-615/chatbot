@@ -17,7 +17,12 @@ class Routes {
         );
         this.router.get(
             "/logs",
-            this.controller_logs.getLogs.bind(this.controller)
+            this.controller_logs.getLogs.bind(this.controller_logs)
+        )
+        this.router.get(
+            "/ia-logs",
+            this.controller_logs.getLogsIA.bind(this.controller_logs)
+            
         )
     }
 }

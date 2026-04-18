@@ -9,9 +9,8 @@ class Database {
             dbConfig.PASSWORD,
             {
                 host: dbConfig.HOST,
-                port: dbConfig.PORT,
                 dialect: dbConfig.dialect,
-                port: dbConfig.PORT,
+                port: dbConfig.DB_PORT,
                 pool: dbConfig.pool,
                 dialectOptions: {
                     ssl: {
@@ -32,16 +31,16 @@ class Database {
 
     _loadModels() {
         const sequelize = this._sequelize;
-        this.models.n8n = require('./n8n.js')(sequelize); 0
+        this.models.n8n = require('./n8n.js')(sequelize); 
     }
 
 
     _associateModels() {
-        const { n8n } = this.models;
+        const { n8n} = this.models;
 
 
     }
-
+    
     get sequelize() {
         return this._sequelize;
     }
