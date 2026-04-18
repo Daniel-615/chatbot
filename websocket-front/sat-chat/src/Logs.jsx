@@ -27,10 +27,6 @@ export default function Logs() {
       });
   }, []);
 
-  // =========================
-  // HELPERS
-  // =========================
-
   const safeJSON = (value) => {
     if (!value) return null;
 
@@ -66,7 +62,7 @@ export default function Logs() {
   const getAvatar = (type) => {
     if (type === "human") return "/vegetta.webp";
     if (type === "ai") return "/gemini.webp";
-    if (type ==="tool") return "/docs.webp";
+    if (type === "tool") return "/docs.webp";
     return "/vegetta.webp";
   };
 
@@ -86,6 +82,18 @@ export default function Logs() {
           </div>
 
           <nav className="header-nav">
+            <button
+              onClick={() => navigate("/dashboard")}
+              style={{
+                padding: 10,
+                background: "#235B4E",
+                color: "white",
+                border: "none",
+                cursor: "pointer"
+              }}
+            >
+              Ir al Dashboard
+            </button>
             <button className="nav-btn" onClick={() => navigate("/")}>
               Volver al Chat
             </button>

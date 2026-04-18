@@ -1,0 +1,49 @@
+.dashboard-container {
+  padding: 20px;
+  background: #f6f7f9;
+  min-height: 100vh;
+  font-family: sans-serif;
+}
+
+.title {
+  margin-bottom: 20px;
+  color: #235B4E;
+}
+
+.cards {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.card {
+  flex: 1;
+  background: white;
+  padding: 15px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.card h3 {
+  font-size: 14px;
+  color: #666;
+}
+
+.card p {
+  font-size: 22px;
+  font-weight: bold;
+  color: #235B4E;
+}
+
+.charts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.chart-box {
+  background: white;
+  padding: 15px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
