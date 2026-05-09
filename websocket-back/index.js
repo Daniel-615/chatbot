@@ -5,6 +5,7 @@ const http = require("http");
 
 const db = require("./src/models");
 const Routes = require("./src/routes/routes.js");
+const chatRoute= require("./src/routes/chat.route.js")
 const SocketServer = require("./src/controllers/websocket.js");
 
 const app = express();
@@ -17,14 +18,14 @@ app.use(cors({ origin: true, credentials: true }));
 app.use(express.json());
 
 new Routes(app);
-
+new chatRoute(app);
 const socketServer = new SocketServer(server);
 
 app.set("ws", socketServer);
 async function showTables() {
     try {
         const tables = await db.sequelize.getQueryInterface().showAllTables();
-        console.log("📦 Tablas en la base de datos:");
+        console.log("Tablas en la base de datos:");
         console.log(tables);
     } catch (err) {
         console.error(err);
@@ -33,7 +34,7 @@ async function showTables() {
 async function connectDB() {
     try {
         await db.sequelize.sync();
-        console.log("✅ DB conectada");
+        console.log("DB conectada");
         showTables();
     } catch (err) {
         console.error(err);
@@ -41,6 +42,6 @@ async function connectDB() {
 }
 
 server.listen(PORT, async () => {
-    console.log(`🚀 Server running on ${PORT}`);
+    console.log(`Server running on ${PORT}`);
     await connectDB();
 });
