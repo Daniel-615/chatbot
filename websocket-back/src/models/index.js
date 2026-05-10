@@ -39,7 +39,7 @@ class Database {
     }
 
     _associateModels() {
-        const { chat, user } = this.models;
+        const { chat, user, message } = this.models;
 
         user.hasMany(chat, {
             foreignKey: 'user_id'

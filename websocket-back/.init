@@ -1,0 +1,12 @@
+# Análisis del Backend del Chatbot SAT
+
+El backend está construido con **Node.js, Express y WebSockets**, e interactúa con una base de datos mediante un ORM (Sequelize). La lógica se estructura así:
+
+1. **Servidor Híbrido**: En `index.js`, se crea un servidor HTTP nativo sobre la aplicación Express y se adjunta un servidor de WebSockets (`SocketServer`). Esto permite manejar peticiones REST y conexiones persistentes WS por el mismo puerto (3000).
+2. **Arquitectura MVC y Base de Datos**:
+   - Usa `Sequelize` para modelar y sincronizar tablas (User, Chat, Message, n8n). Al arrancar el servidor (`connectDB`), se sincroniza la base de datos y se muestran las tablas.
+   - Existen controladores (`chat.controller.js`, `message.controller.js`, etc.) y rutas organizadas (`/api/chat/create`, `/api/chat/message`, etc.) para guardar el historial de la conversación.
+3. **Flujo de Comunicación con el Frontend**:
+   - **Registro (WS)**: El cliente se conecta por WebSocket y manda un evento `"init"` con su `sessionId`. El backend asocia esa conexión (socket) a ese `sessionId` en memoria.
+   - **Recepción (REST)**: El cliente hace un POST a `/api/n8n/message`. El backend recibe esta petición HTTP, guarda el mensaje en la base de datos, y probablemente se comunica con un flujo de **n8n** (una herramienta de automatización que actúa como el "cerebro" o puente hacia un LLM como Gemini/OpenAI).
+   - **Respuesta (WS)**: Una vez que n8n o la IA genera la respuesta, el backend busca en memoria el socket asociado al `sessionId` y le envía un evento `"n8n-response"` con la respuesta del bot para que aparezca en el chat en tiempo real.

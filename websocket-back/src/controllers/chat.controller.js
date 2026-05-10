@@ -13,7 +13,7 @@ class Chat {
                 });
         }
         try {
-            const chat = await CHAT.finOne({
+            const chat = await CHAT.findOne({
                 where: {
                     user_id
                 },
