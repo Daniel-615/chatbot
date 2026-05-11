@@ -301,7 +301,8 @@ body {
   position: fixed;
   top: 0;
   right: 0;
-  width: 400px;
+  width: 100%;
+  max-width: 400px;
   height: 100vh;
   z-index: 200;
   transform: translateX(100%);
@@ -676,6 +677,21 @@ body {
 /* ============================================ */
 
 @media (max-width: 900px) {
+  .sat-nav-content {
+    flex-direction: column;
+  }
+  
+  .sat-nav-links-official {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    white-space: nowrap;
+    padding-bottom: 4px;
+  }
+
+  .sat-logo-full {
+    padding: 12px 16px;
+  }
+
   .hero-content {
     flex-direction: column;
     text-align: center;
@@ -700,6 +716,17 @@ body {
 }
 
 @media (max-width: 480px) {
+  .sat-gov-bar-content {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
+  .sat-gov-bar-right {
+    flex-direction: column;
+    gap: 4px;
+  }
+
   .hero-title {
     font-size: 32px;
   }
