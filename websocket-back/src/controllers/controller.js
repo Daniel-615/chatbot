@@ -77,6 +77,7 @@ class Controller {
                     : null) ||
                 "No se obtuvo respuesta";
             const saved = await N8N.create({
+                sessionId,
                 message,
                 response: { text: cleanResponse }
             });

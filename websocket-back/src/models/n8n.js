@@ -11,6 +11,10 @@ module.exports = (sequelize) => {
         autoIncrement: true,
         primaryKey: true,
       },
+      sessionId: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
       message: {
         type: DataTypes.TEXT,
         allowNull: false,
