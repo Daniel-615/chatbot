@@ -14,7 +14,7 @@ class Controller {
             }
 
             const responseFromN8n = await fetch(
-                "http://localhost:5678/webhook/chatbot-sat",
+                "http://localhost:5678/webhook-test/chatbot-sat",
                 {
                     method: "POST",
                     headers: {

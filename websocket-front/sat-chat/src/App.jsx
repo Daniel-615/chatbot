@@ -134,10 +134,10 @@ export default function App() {
             </div>
           </div>
           <nav className="sat-nav-links-official">
-            <a href="#">Servicios Tributarios</a>
-            <a href="#">Aduanas</a>
-            <a href="#">Capacitación</a>
-            <a href="#">Contáctanos</a>
+            <a href="/servicios">Servicios Tributarios</a>
+            <a href="/aduanas">Aduanas</a>
+            <a href="/capacitacion">Capacitación</a>
+            <a href="/contactanos">Contáctanos</a>
             <button className="btn-admin" onClick={() => navigate("/dashboard")}>Dashboard</button>
             <button className="btn-admin" onClick={() => navigate("/logs")}>Logs</button>
           </nav>
