@@ -8,8 +8,17 @@ export default function Logs() {
   const [logsIA, setLogsIA] = useState([]);
   const [loading, setLoading] = useState(true);
   const [view, setView] = useState("backend");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [filterType, setFilterType] = useState("all");
+  const [sortOrder, setSortOrder] = useState("desc");
+  const itemsPerPage = 10;
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [view, searchTerm, filterType, sortOrder]);
 
   useEffect(() => {
     Promise.all([
@@ -69,6 +78,48 @@ export default function Logs() {
 
   const data = view === "backend" ? logs : logsIA;
 
+  let processedData = data.filter((log) => {
+    // Filtrado por tipo (humano, ia, etc.)
+    if (filterType !== "all") {
+      const msg = safeJSON(log.message);
+      const type = view === "ia" ? getType(msg) : "system";
+      if (type !== filterType) return false;
+    }
+
+    // Búsqueda por texto
+    if (!searchTerm) return true;
+    const term = searchTerm.toLowerCase();
+    
+    if (log.id && String(log.id).includes(term)) return true;
+    
+    if (log.session_id && String(log.session_id).toLowerCase().includes(term)) return true;
+    if (log.sessionId && String(log.sessionId).toLowerCase().includes(term)) return true;
+    
+    const msg = safeJSON(log.message);
+    const content = getContent(msg).toLowerCase();
+    if (content.includes(term)) return true;
+
+    if (view === "backend" && log.response) {
+      const respStr = JSON.stringify(log.response).toLowerCase();
+      if (respStr.includes(term)) return true;
+    }
+    
+    return false;
+  });
+
+  // Ordenamiento
+  processedData.sort((a, b) => {
+    if (sortOrder === "asc") {
+      return a.id - b.id;
+    } else {
+      return b.id - a.id;
+    }
+  });
+
+  const totalPages = Math.ceil(processedData.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const paginatedData = processedData.slice(startIndex, startIndex + itemsPerPage);
+
   return (
     <div className="sat-page">
       {/* Barra superior gubernamental */}
@@ -127,25 +178,64 @@ export default function Logs() {
             <h1>Registro de Actividad</h1>
           </div>
 
-          {/* SWITCH */}
-          <div className="logs-view-switch">
-            <button
-              type="button"
-              onClick={() => setView("backend")}
-              className={`logs-view-btn ${view === "backend" ? "active" : ""}`}
-            >
-              Backend
-              <span className="count-badge">{logs.length}</span>
-            </button>
+          {/* CONTROLS (SWITCH & SEARCH) */}
+          <div className="logs-controls">
+            <div className="logs-view-switch" style={{ marginBottom: 0 }}>
+              <button
+                type="button"
+                onClick={() => setView("backend")}
+                className={`logs-view-btn ${view === "backend" ? "active" : ""}`}
+              >
+                Backend
+                <span className="count-badge">{logs.length}</span>
+              </button>
 
-            <button
-              type="button"
-              onClick={() => setView("ia")}
-              className={`logs-view-btn ${view === "ia" ? "active" : ""}`}
-            >
-              IA
-              <span className="count-badge">{logsIA.length}</span>
-            </button>
+              <button
+                type="button"
+                onClick={() => setView("ia")}
+                className={`logs-view-btn ${view === "ia" ? "active" : ""}`}
+              >
+                IA
+                <span className="count-badge">{logsIA.length}</span>
+              </button>
+            </div>
+
+            <div className="logs-search-wrapper">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+              <input
+                type="text"
+                placeholder="Buscar por ID, sesión o contenido..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+            
+            <div className="logs-filters">
+              {view === "ia" && (
+                <select 
+                  className="logs-select"
+                  value={filterType}
+                  onChange={(e) => setFilterType(e.target.value)}
+                >
+                  <option value="all">Todos los tipos</option>
+                  <option value="human">Usuario (Human)</option>
+                  <option value="ai">Asistente (AI)</option>
+                  <option value="tool">Herramienta (Tool)</option>
+                </select>
+              )}
+              
+              <select 
+                className="logs-select"
+                value={sortOrder}
+                onChange={(e) => setSortOrder(e.target.value)}
+              >
+                <option value="desc">Más recientes primero (Descendente)</option>
+                <option value="asc">Más antiguos primero (Ascendente)</option>
+              </select>
+            </div>
           </div>
 
           {/* LISTA */}
@@ -154,7 +244,7 @@ export default function Logs() {
               <div className="logs-loading">
                 <p>Cargando registros...</p>
               </div>
-            ) : data.length === 0 ? (
+            ) : processedData.length === 0 ? (
               <div className="logs-empty">
                 <div className="empty-icon">
                   <svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="#1e3a5f" strokeWidth="1.6">
@@ -162,11 +252,12 @@ export default function Logs() {
                     <polyline points="14,2 14,8 20,8"/>
                   </svg>
                 </div>
-                <p>No hay registros disponibles</p>
+                <p>{data.length === 0 ? "No hay registros disponibles" : "No se encontraron resultados para la búsqueda"}</p>
               </div>
             ) : (
-              <div className="logs-list">
-                {data.map((log) => {
+              <>
+                <div className="logs-list">
+                  {paginatedData.map((log) => {
                   const msg = safeJSON(log.message);
                   const type = view === "ia" ? getType(msg) : "system";
 
@@ -222,7 +313,44 @@ export default function Logs() {
                     </article>
                   );
                 })}
-              </div>
+                </div>
+                
+                {totalPages > 1 && (
+                  <div className="logs-pagination">
+                    <button 
+                      className="pagination-btn" 
+                      onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                      disabled={currentPage === 1}
+                    >
+                      Anterior
+                    </button>
+                    <div className="pagination-info">
+                      <span>Página</span>
+                      <input 
+                        type="number" 
+                        min="1" 
+                        max={totalPages} 
+                        value={currentPage}
+                        onChange={(e) => {
+                          const val = parseInt(e.target.value, 10);
+                          if (!isNaN(val)) {
+                            setCurrentPage(Math.min(Math.max(1, val), totalPages));
+                          }
+                        }}
+                        className="pagination-input"
+                      />
+                      <span>de {totalPages}</span>
+                    </div>
+                    <button 
+                      className="pagination-btn" 
+                      onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                      disabled={currentPage === totalPages}
+                    >
+                      Siguiente
+                    </button>
+                  </div>
+                )}
+              </>
             )}
           </div>
         </div>
