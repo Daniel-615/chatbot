@@ -22,7 +22,7 @@ class ChatRoute {
     registerRoutes() {
 
         this.router.get(
-            "/",
+            "/:user_id",
             this.chatController.getChatUser.bind(this.chatController)
         );
 

@@ -10,7 +10,6 @@ class SocketServer {
 
     init() {
         this.wss.on("connection", (ws) => {
-            console.log("Cliente conectado");
 
             ws.on("message", (data) => {
                 const msg = JSON.parse(data);

@@ -1,72 +1,126 @@
 const db = require("../models");
+const MESSAGE = db.getModel("message");
 const CHAT = db.getModel("chat");
-const MESSAGE = db.getModel("message")
+const USER = db.getModel("user");
 class Chat {
-    async getChatUser(req,res) {
-        const { user_id } = req.body;
+
+    async getChatUser(req, res) {
+
+        const { user_id } = req.params;
+
         if (!user_id) {
-            return res
-                .status(400)
-                .json({
-                    ok: false,
-                    message: "Debes enviar un user_id"
-                });
+            return res.status(400).json({
+                ok: false,
+                message: "Debes enviar user_id"
+            });
         }
+
         try {
+
+            const user = await USER.findOne({
+                where: {
+                    username: user_id
+                }
+            });
+
+            if (!user) {
+                return res.status(404).json({
+                    ok: false,
+                    message: "Usuario no encontrado"
+                });
+            }
+
             const chat = await CHAT.findOne({
                 where: {
-                    user_id
+                    user_id: user.id
                 },
                 include: [
                     {
-                        model: MESSAGE
+                        model: MESSAGE,
+                        as: "messages"
                     }
+                ],
+                order: [
+                    [{ model: MESSAGE, as: "messages" }, "createdAt", "ASC"]
                 ]
-            })
+            });
+
             if (!chat) {
-                return res.
-                    status(404)
-                    .json({
-                        ok: false,
-                        message: "Chat no encontrado"
-                    })
-            }
-            return res
-                .status(200)
-                .json({
-                    ok: true,
-                    message: "Chat encontrado",
-                    chat
-                })
-        } catch (err) {
-            return res
-                .status(500)
-                .json({
+                return res.status(404).json({
                     ok: false,
-                    message: "Error interno del servidor"
-                })
+                    message: "Chat no encontrado"
+                });
+            }
+
+            return res.status(200).json({
+                ok: true,
+                chat
+            });
+
+        } catch (err) {
+
+
+            return res.status(500).json({
+                ok: false,
+                message: "Error interno"
+            });
+        }
+    }
+
+    async createChatUser(req, res) {
+
+        const { user_id } = req.body;
+
+        if (!user_id) {
+            return res.status(400).json({
+                ok: false,
+                message: "Debes enviar user_id"
+            });
         }
 
-    }
-    async createChatUser(req, res) {
-        const { user_id, message } = req.body;
-        if (!user_id || !message) {
-            return res
-                .status(400)
-                .json({
-                    ok: false,
-                    message: "Debes enviar un user_id y un message"
-                })
-        }
-        const chat = await CHAT.create({
-            user_id,
-        });
-        return res
-            .status(200)
-            .json({
+        try {
+
+            let user = await USER.findOne({
+                where: {
+                    username: user_id
+                }
+            });
+
+            if (!user) {
+
+                user = await USER.create({
+                    username: user_id
+                });
+            }
+
+            let chat = await CHAT.findOne({
+                where: {
+                    user_id: user.id
+                }
+            });
+
+            if (!chat) {
+
+                chat = await CHAT.create({
+                    user_id: user.id
+                });
+            }
+
+            return res.status(200).json({
                 ok: true,
-                message: "Mensaje asociado al chat"
-            })
+                user,
+                chat
+            });
+
+        } catch (err) {
+
+
+
+            return res.status(500).json({
+                ok: false,
+                message: "Error interno"
+            });
+        }
     }
 }
 module.exports = Chat;

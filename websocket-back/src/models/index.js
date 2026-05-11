@@ -35,11 +35,16 @@ class Database {
         this.models.n8n = require('./n8n.js')(sequelize);
         this.models.chat = require('./chat.js')(sequelize);
         this.models.user = require('./user.js')(sequelize);
-        this.models.message= require('./message.js')(sequelize);
+        this.models.message = require('./message.js')(sequelize);
     }
 
     _associateModels() {
-        const { chat, user, message } = this.models;
+
+        const {
+            chat,
+            user,
+            message
+        } = this.models;
 
         user.hasMany(chat, {
             foreignKey: 'user_id'
@@ -49,14 +54,15 @@ class Database {
             foreignKey: 'user_id'
         });
 
-        chat.hasMany(message,{
+        chat.hasMany(message, {
+            foreignKey: 'chat_id',
+            as: 'messages'
+        });
+
+        message.belongsTo(chat, {
             foreignKey: 'chat_id'
         });
-        message.belongsTo(chat,{
-            foreignKey: 'chat_id'
-        })
     }
-
     get sequelize() {
         return this._sequelize;
     }

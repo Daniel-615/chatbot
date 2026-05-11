@@ -47,7 +47,7 @@ class ControllerLogs {
             });
 
         } catch (error) {
-            console.error(error);
+
             return res.status(500).json({
                 ok: false,
                 error: error.message

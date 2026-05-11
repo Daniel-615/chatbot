@@ -14,7 +14,7 @@ class Controller {
             }
 
             const responseFromN8n = await fetch(
-                "http://localhost:5678/webhook-test/chatbot-sat",
+                "http://localhost:5678/webhook/chatbot-sat",
                 {
                     method: "POST",
                     headers: {
@@ -100,7 +100,7 @@ class Controller {
             });
 
         } catch (error) {
-            console.error("Controller error:", error);
+
 
             const wsServer = req.app.get("ws");
 

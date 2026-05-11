@@ -10,7 +10,7 @@
   --color-sat-gold: #c79a3a;
   --color-sat-gold-dark: #a37c25;
   --color-sat-red: #c8102e;
-  
+
   /* Neutrals */
   --color-white: #ffffff;
   --color-not-quite-black: #23272a;
@@ -24,7 +24,7 @@
   --color-gray-600: #4b5563;
   --color-gray-700: #334155;
   --color-sat-blue-soft: #f4f7fb;
-  
+
   /* Typography */
   --font-display: 'Roboto Slab', Georgia, serif;
   --font-body: 'Open Sans', system-ui, sans-serif;
@@ -103,7 +103,8 @@ body {
 
 .sat-official-nav {
   width: 100%;
-  background: #005a90; /* Color exacto de la barra azul del SAT */
+  background: #005a90;
+  /* Color exacto de la barra azul del SAT */
   border-bottom: 3px solid var(--color-sat-gold);
 }
 
@@ -253,7 +254,7 @@ body {
   cursor: pointer;
   transition: all 0.2s;
   font-family: var(--font-body);
-  box-shadow: 0 4px 14px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
 }
 
 .btn-primary:hover {
@@ -288,9 +289,17 @@ body {
 }
 
 @keyframes float {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-20px); }
-  100% { transform: translateY(0px); }
+  0% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-20px);
+  }
+
+  100% {
+    transform: translateY(0px);
+  }
 }
 
 /* ============================================ */
@@ -318,7 +327,7 @@ body {
   width: 100%;
   height: 100%;
   background: var(--color-white);
-  box-shadow: -4px 0 24px rgba(0,0,0,0.1);
+  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -336,7 +345,7 @@ body {
   color: var(--color-white);
   border: none;
   border-radius: 50%;
-  box-shadow: 0 4px 14px rgba(0,0,0,0.3);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -396,8 +405,13 @@ body {
   border-radius: 50%;
 }
 
-.online .status-dot { background: #57f287; }
-.offline .status-dot { background: #ed4245; }
+.online .status-dot {
+  background: #57f287;
+}
+
+.offline .status-dot {
+  background: #ed4245;
+}
 
 .status-text {
   font-size: 12px;
@@ -417,6 +431,7 @@ body {
   justify-content: center;
   border-radius: 4px;
 }
+
 .close-chat-btn:hover {
   background: rgba(255, 255, 255, 0.1);
 }
@@ -446,6 +461,7 @@ body {
 .messages-container::-webkit-scrollbar {
   width: 8px;
 }
+
 .messages-container::-webkit-scrollbar-thumb {
   background: var(--color-gray-300);
   border-radius: 4px;
@@ -476,47 +492,52 @@ body {
 
 .message {
   display: flex;
-  gap: 16px;
+  gap: 14px;
+  margin-bottom: 18px;
   animation: slideIn 0.3s ease;
+  align-items: flex-start;
 }
 
 @keyframes slideIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .message-avatar {
   flex-shrink: 0;
   width: 40px;
   height: 40px;
-  align-self: flex-start;
+  border-radius: 50%;
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .message-avatar .avatar-img {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
 }
 
-.message.bot .message-avatar {
-  border-radius: 50%;
+.bot-avatar {
   background: var(--color-sat-blue);
-  color: var(--color-white);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  align-self: flex-start;
-  width: 40px;
-  height: 40px;
+}
+
+.user-avatar {
+  background: var(--color-sat-gold);
 }
 
 .message-content {
   flex: 1;
+  min-width: 0;
 }
 
 .message-header {
@@ -569,6 +590,12 @@ body {
   justify-content: flex-end;
 }
 
+.message.user .message-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
 .message-text p {
   margin: 0;
 }
@@ -588,13 +615,31 @@ body {
   animation: typing 1.4s infinite ease-in-out;
 }
 
-.typing-dots span:nth-child(1) { animation-delay: 0s; }
-.typing-dots span:nth-child(2) { animation-delay: 0.2s; }
-.typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+.typing-dots span:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.typing-dots span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.typing-dots span:nth-child(3) {
+  animation-delay: 0.4s;
+}
 
 @keyframes typing {
-  0%, 80%, 100% { transform: scale(0); opacity: 0.5; }
-  40% { transform: scale(1); opacity: 1; }
+
+  0%,
+  80%,
+  100% {
+    transform: scale(0);
+    opacity: 0.5;
+  }
+
+  40% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 /* Input Area */
@@ -662,7 +707,7 @@ body {
 .sat-footer {
   padding: 24px;
   text-align: center;
-  border-top: 1px solid rgba(255,255,255,0.1);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
   margin-top: auto;
 }
 
@@ -680,7 +725,7 @@ body {
   .sat-nav-content {
     flex-direction: column;
   }
-  
+
   .sat-nav-links-official {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
@@ -709,7 +754,7 @@ body {
   .hero-ctas {
     justify-content: center;
   }
-  
+
   .chat-container {
     transform: none !important;
   }
@@ -721,7 +766,7 @@ body {
     align-items: flex-start;
     gap: 8px;
   }
-  
+
   .sat-gov-bar-right {
     flex-direction: column;
     gap: 4px;
@@ -730,8 +775,9 @@ body {
   .hero-title {
     font-size: 32px;
   }
-  
-  .btn-primary, .btn-secondary {
+
+  .btn-primary,
+  .btn-secondary {
     width: 100%;
   }
 
