@@ -14,7 +14,7 @@ class Controller {
             }
 
             const responseFromN8n = await fetch(
-                "http://localhost:5678/webhook/chatbot-sat",
+                "https://5d45-168-232-79-190.ngrok-free.app",
                 {
                     method: "POST",
                     headers: {
