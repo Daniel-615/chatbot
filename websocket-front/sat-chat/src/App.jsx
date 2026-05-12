@@ -171,8 +171,8 @@ export default function App() {
           </div>
 
           {/* Right 50% - Chat Product Mockup (Sliding Panel) */}
-          <button className="chat-toggle-btn" onClick={() => setIsChatOpen(true)}>
-            <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" strokeWidth="2">
+          <button className="chat-toggle-btn" onClick={() => setIsChatOpen(true)} aria-label="Abrir asistente virtual">
+            <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
               <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
             </svg>
           </button>
@@ -199,12 +199,12 @@ export default function App() {
                 </div>
                 <div style={{display: 'flex', gap: '8px', alignItems: 'center'}}>
                   {!connected && (
-                    <button className="reconnect-btn" onClick={connectWS}>
+                    <button className="reconnect-btn" onClick={connectWS} aria-label="Reconectar al servidor">
                       Reconectar
                     </button>
                   )}
-                  <button className="close-chat-btn" onClick={() => setIsChatOpen(false)}>
-                    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <button className="close-chat-btn" onClick={() => setIsChatOpen(false)} aria-label="Cerrar chat">
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
                       <line x1="18" y1="6" x2="6" y2="18"/>
                       <line x1="6" y1="6" x2="18" y2="18"/>
                     </svg>
@@ -283,6 +283,7 @@ export default function App() {
                     onChange={(e) => setInput(e.target.value)}
                     placeholder="Preguntar al asistente..."
                     onKeyDown={(e) => e.key === "Enter" && sendMessage()}
+                    aria-label="Campo de texto para escribir tu consulta"
                   />
                   <button
                     className="send-btn"
@@ -295,6 +296,10 @@ export default function App() {
                       <polygon points="22,2 15,22 11,13 2,9"/>
                     </svg>
                   </button>
+                </div>
+                {/* Texto de Consentimiento Informado */}
+                <div className="consent-text" style={{ fontSize: '11px', color: '#666', textAlign: 'center', marginTop: '8px', padding: '0 10px' }}>
+                  Al usar este chat, aceptas nuestro <a href="#" style={{ color: '#1e3a5f', textDecoration: 'underline' }}>Aviso de Privacidad</a> y el uso de Inteligencia Artificial.
                 </div>
               </div>
             </div>
